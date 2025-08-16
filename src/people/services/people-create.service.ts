@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { PeopleRepositoryInterface } from '@shared/infraestructure/database/repositories/people-repository.interface';
 import { HasherGatewayInterface } from '@shared/infraestructure/gateways/hasher-gateway.interface';
 import { CreatePersonDto } from '../dto/create-person.dto';
@@ -10,15 +10,15 @@ export class PeopleCreateService {
     @Inject('HasherGatewayInterface')
     private readonly hasherGateway: HasherGatewayInterface,
     @Inject('PeopleRepositoryInterface')
-    private readonly peopleRepository: PeopleRepositoryInterface
-  ) { }
+    private readonly peopleRepository: PeopleRepositoryInterface,
+  ) {}
 
   async execute(payload: CreatePersonDto) {
     const { name, document, password } = payload;
 
     const personExists = await this.peopleRepository.exists(document);
     if (personExists) {
-      throw new Error("Person already exists")
+      throw new ConflictException('Person already exists');
     }
 
     const hashedPass = await this.hasherGateway.hash(password);
