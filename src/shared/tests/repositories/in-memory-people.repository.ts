@@ -1,5 +1,5 @@
 import { PeopleRepositoryInterface } from '@shared/infraestructure/database/repositories/people-repository.interface';
-import { Person } from 'src/people/entities/person.entity';
+import { Person } from 'src/modules/people/entities/person.entity';
 
 export class InMemoryPeopleRepository implements PeopleRepositoryInterface {
   public people: Person[] = [];
