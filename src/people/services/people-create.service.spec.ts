@@ -1,4 +1,3 @@
-import { ConflictException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { HasherGatewayInterface } from '@shared/infraestructure/gateways/hasher-gateway.interface';
 import { InMemoryHasherGateway } from '@shared/tests/in-memory.gateways/hasher.gateway';
@@ -37,7 +36,7 @@ describe('PeopleCreateService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should throw a conflict exception if person already exists', async () => {
+  it('should return a Left if person already exists', async () => {
     const person = Person.create({
       name: 'John Doe',
       document: '12345678900',
@@ -45,43 +44,53 @@ describe('PeopleCreateService', () => {
     });
     peopleRepository["people"].push(person);
 
-    await expect(
-      service.execute({
-        name: 'Jane Doe',
-        document: '12345678900',
-        password: 'password',
-      }),
-    ).rejects.toThrow(ConflictException);
+    const result = await service.execute({
+      name: 'Jane Doe',
+      document: '12345678900',
+      password: 'password',
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(Error);
+    expect(result.value).toEqual(new Error('Person already exists'));
   });
 
-  it('should hash the password', async () => {
+  it('should hash the password on success', async () => {
     const hashSpy = jest.spyOn(hasherGateway, 'hash');
-    await service.execute({
+    const result = await service.execute({
       name: 'John Doe',
       document: '12345678900',
       password: 'password',
     });
+
+    expect(result.isRight()).toBe(true);
     expect(hashSpy).toHaveBeenCalledWith('password');
   });
 
-  it('should save the person', async () => {
+  it('should save the person on success', async () => {
     const saveSpy = jest.spyOn(peopleRepository, 'save');
-    await service.execute({
+    const result = await service.execute({
       name: 'John Doe',
       document: '12345678900',
       password: 'password',
     });
+
+    expect(result.isRight()).toBe(true);
     expect(saveSpy).toHaveBeenCalled();
   });
 
-  it('should return the created person', async () => {
-    const person = await service.execute({
+  it('should return a Right with the created person on success', async () => {
+    const result = await service.execute({
       name: 'John Doe',
       document: '12345678900',
       password: 'password',
     });
-    expect(person).toHaveProperty('id');
-    expect(person.name).toBe('John Doe');
-    expect(person.document).toBe('12345678900');
+
+    expect(result.isRight()).toBe(true);
+    if (result.isRight()) {
+      expect(result.value).toBeInstanceOf(Person);
+      expect(result.value.name).toBe('John Doe');
+      expect(result.value.document).toBe('12345678900');
+    }
   });
 });
