@@ -18,9 +18,7 @@ export class PeopleController {
   @Post()
   async create(@Body() createPersonDto: CreatePersonDto) {
     const result = await this.createService.execute(createPersonDto);
-    if (result.isLeft()) {
-      throw result;
-    }
+    if (result.isLeft()) throw result;
     return result.value.toJSON();
   }
 }
