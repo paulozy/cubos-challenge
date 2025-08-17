@@ -89,10 +89,7 @@ describe('AuthLoginService', () => {
       password: 'password',
     });
 
-    expect(jwtService.signAsync).toHaveBeenCalledWith({
-      sub: person.id,
-      document: person.document,
-    });
+    expect(jwtService.signAsync).toHaveBeenCalledWith(person.toJSON(), { expiresIn: '2d' });
   });
 
   it('should return Right with a bearer token on success', async () => {
