@@ -5,6 +5,7 @@ import { Person } from '../people/entities/person.entity';
 import { AccountController } from './account.controller';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { CreateCardDto } from './dto/create-card.dto';
+import { CreateInternalTransactionDto } from './dto/create-internal-transaction.dto';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { Account } from './entities/account.entity';
 import { Card, CardType } from './entities/card.entity';
@@ -14,6 +15,7 @@ import { AccountListService } from './services/account-list.service';
 import { CardCreateService } from './services/card-create.service';
 import { CardListService } from './services/card-list.service';
 import { TransactionCreateService } from './services/transaction-create.service';
+import { TransactionInternalService } from './services/transaction-internal.service';
 
 const mockAccountCreateService = {
   execute: jest.fn(),
@@ -32,6 +34,10 @@ const mockCardListService = {
 };
 
 const mockTransactionCreateService = {
+  execute: jest.fn(),
+};
+
+const mockTransactionInternalService = {
   execute: jest.fn(),
 };
 
@@ -67,6 +73,10 @@ describe.skip('AccountController', () => {
         {
           provide: TransactionCreateService,
           useValue: mockTransactionCreateService,
+        },
+        {
+          provide: TransactionInternalService,
+          useValue: mockTransactionInternalService,
         },
       ],
     })
@@ -204,6 +214,49 @@ describe.skip('AccountController', () => {
       expect(mockTransactionCreateService.execute).toHaveBeenCalledWith(
         payload,
         mockAccount.id,
+      );
+    });
+  });
+
+  describe('createInternalTransaction', () => {
+    it('should create an internal transaction', async () => {
+      const senderAccount = Account.create({
+        account: '1234567-8',
+        branch: '0001',
+        ownerId: person.id,
+      });
+
+      const receiverAccount = Account.create({
+        account: '8765432-1',
+        branch: '0001',
+        ownerId: 'another-person-id',
+      });
+
+      const mockTransaction = Transaction.create({
+        value: -100,
+        description: 'Test',
+        type: TransactionType.DEBIT,
+        accountId: senderAccount.id,
+      });
+
+      const payload: CreateInternalTransactionDto = {
+        receiverAccountId: receiverAccount.id,
+        value: 100,
+        description: 'Test',
+      };
+
+      mockTransactionInternalService.execute.mockResolvedValue(
+        right(mockTransaction),
+      );
+
+      const result = await controller.createInternalTransaction(
+        senderAccount.id,
+        payload,
+      );
+      expect(result).toEqual(mockTransaction.toJSON());
+      expect(mockTransactionInternalService.execute).toHaveBeenCalledWith(
+        payload,
+        senderAccount.id,
       );
     });
   });

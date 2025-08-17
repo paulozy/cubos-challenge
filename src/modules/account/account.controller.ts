@@ -13,12 +13,14 @@ import { Person } from 'src/modules/people/entities/person.entity';
 import { JwtAuthGuard } from '../../infraestructure/auth/guards/jwt-auth.guard';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { CreateCardDto } from './dto/create-card.dto';
+import { CreateInternalTransactionDto } from './dto/create-internal-transaction.dto';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { AccountCreateService } from './services/account-create.service';
 import { AccountListService } from './services/account-list.service';
 import { CardCreateService } from './services/card-create.service';
 import { CardListService } from './services/card-list.service';
 import { TransactionCreateService } from './services/transaction-create.service';
+import { TransactionInternalService } from './services/transaction-internal.service';
 
 @Controller('accounts')
 @UseGuards(JwtAuthGuard)
@@ -30,6 +32,7 @@ export class AccountController {
     private readonly cardCreateService: CardCreateService,
     private readonly cardListService: CardListService,
     private readonly transactionCreateService: TransactionCreateService,
+    private readonly transactionInternalService: TransactionInternalService,
   ) {}
 
   @Post()
@@ -79,6 +82,19 @@ export class AccountController {
   ) {
     const result = await this.transactionCreateService.execute(
       createTransactionDto,
+      accountId,
+    );
+    if (result.isLeft()) throw result;
+    return result.value.toJSON();
+  }
+
+  @Post(':accountId/transactions/internal')
+  async createInternalTransaction(
+    @Param('accountId') accountId: string,
+    @Body() createInternalTransactionDto: CreateInternalTransactionDto,
+  ) {
+    const result = await this.transactionInternalService.execute(
+      createInternalTransactionDto,
       accountId,
     );
     if (result.isLeft()) throw result;
