@@ -1,11 +1,18 @@
-import { createZodDto } from '@anatine/zod-nestjs';
-import { z } from 'zod';
+import { IsEnum, IsOptional, IsString, Length, MaxLength, MinLength } from 'class-validator';
 import { CardType } from '../entities/card.entity';
 
-export const CreateCardSchema = z.object({
-  type: z.nativeEnum(CardType),
-  number: z.string().min(13).max(19).optional(),
-  cvv: z.string().min(3).max(3).optional(),
-});
+export class CreateCardDto {
+  @IsEnum(CardType)
+  type: CardType;
 
-export class CreateCardDto extends createZodDto(CreateCardSchema) { }
+  @IsOptional()
+  @IsString()
+  @MinLength(13)
+  @MaxLength(19)
+  number?: string;
+
+  @IsOptional()
+  @IsString()
+  @Length(3, 3)
+  cvv?: string;
+}

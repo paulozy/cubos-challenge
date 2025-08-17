@@ -1,13 +1,13 @@
-import { createZodDto } from '@anatine/zod-nestjs';
+import { IsString, Matches } from 'class-validator';
 import { CNPJ_REGEX, CPF_REGEX } from '@shared/constants';
-import { z } from 'zod';
 
-export const LoginSchema = z.object({
-  document: z.string().refine(
-    (val) => CPF_REGEX.test(val) || CNPJ_REGEX.test(val),
-    { message: 'Document must be a valid CPF or CNPJ' }
-  ),
-  password: z.string(),
-});
+export class LoginDto {
+  @IsString()
+  @Matches(new RegExp(`(${CPF_REGEX.source})|(${CNPJ_REGEX.source})`), {
+    message: 'Document must be a valid CPF or CNPJ',
+  })
+  document: string;
 
-export class LoginDto extends createZodDto(LoginSchema) { }
+  @IsString()
+  password: string;
+}

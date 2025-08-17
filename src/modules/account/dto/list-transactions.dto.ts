@@ -1,11 +1,21 @@
-import { createZodDto } from '@anatine/zod-nestjs';
-import { z } from 'zod';
+import { IsEnum, IsInt, IsOptional, Min } from 'class-validator';
 import { TransactionType } from '../entities/transaction.entity';
+import { Type } from 'class-transformer';
 
-export const ListTransactionsSchema = z.object({
-  itemsPerPage: z.coerce.number().int().positive().default(10),
-  currentPage: z.coerce.number().int().positive().default(1),
-  type: z.nativeEnum(TransactionType).optional(),
-});
+export class ListTransactionsDto {
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  itemsPerPage?: number = 10;
 
-export class ListTransactionsDto extends createZodDto(ListTransactionsSchema) {}
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @IsOptional()
+  currentPage?: number = 1;
+
+  @IsEnum(TransactionType)
+  @IsOptional()
+  type?: TransactionType;
+}

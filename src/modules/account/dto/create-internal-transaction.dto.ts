@@ -1,12 +1,14 @@
-import { createZodDto } from '@anatine/zod-nestjs';
-import { z } from 'zod';
+import { IsNumber, IsString, IsUUID, Min, MinLength } from 'class-validator';
 
-export const CreateInternalTransactionSchema = z.object({
-  receiverAccountId: z.string().uuid(),
-  value: z.number().positive(),
-  description: z.string().min(1),
-});
+export class CreateInternalTransactionDto {
+  @IsUUID()
+  receiverAccountId: string;
 
-export class CreateInternalTransactionDto extends createZodDto(
-  CreateInternalTransactionSchema,
-) {}
+  @IsNumber()
+  @Min(0.01)
+  value: number;
+
+  @IsString()
+  @MinLength(1)
+  description: string;
+}

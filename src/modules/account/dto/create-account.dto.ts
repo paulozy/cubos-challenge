@@ -1,9 +1,13 @@
-import { createZodDto } from '@anatine/zod-nestjs';
-import { z } from 'zod';
+import { IsString, Length, Matches } from 'class-validator';
 
-export const CreateAccountSchema = z.object({
-  branch: z.string().length(3, { message: 'Branch must be 3 characters long' }),
-  account: z.string().regex(/^\d{7}-\d{1}$/, { message: 'Account must be in the format ddddddd-d' })
-});
+export class CreateAccountDto {
+  @IsString()
+  @Length(3, 3, { message: 'Branch must be 3 characters long' })
+  branch: string;
 
-export class CreateAccountDto extends createZodDto(CreateAccountSchema) { }
+  @IsString()
+  @Matches(/^\d{7}-\d{1}$/, {
+    message: 'Account must be in the format ddddddd-d',
+  })
+  account: string;
+}
