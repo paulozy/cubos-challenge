@@ -144,7 +144,7 @@ describe('TransactionCreateService', () => {
     expect(getBalanceSpy).toHaveBeenCalledWith(account.id);
     if (result.isRight()) {
       expect(result.value).toBeInstanceOf(Transaction);
-      expect(result.value.value).toBe(-100);
+      expect(result.value.value).toBe(100);
       expect(result.value.type).toBe(TransactionType.DEBIT);
     }
 

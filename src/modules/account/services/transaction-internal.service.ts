@@ -44,7 +44,7 @@ export class TransactionInternalService {
     }
 
     const debitTransaction = Transaction.create({
-      value: -value,
+      value,
       description,
       type: TransactionType.DEBIT,
       accountId: senderAccountId,

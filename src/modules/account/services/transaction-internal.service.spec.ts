@@ -179,7 +179,7 @@ describe('TransactionInternalService', () => {
 
     expect(debit).toBeDefined();
     expect(credit).toBeDefined();
-    expect(debit?.value).toBe(-100);
+    expect(debit?.value).toBe(100);
     expect(credit?.value).toBe(100);
 
     const senderBalance = await transactionRepository.getBalance(sender.id);

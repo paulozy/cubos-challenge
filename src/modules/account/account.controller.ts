@@ -24,6 +24,7 @@ import { CardListService } from './services/card-list.service';
 import { TransactionCreateService } from './services/transaction-create.service';
 import { TransactionInternalService } from './services/transaction-internal.service';
 import { TransactionListService } from './services/transaction-list.service';
+import { AccountBalanceService } from './services/account-balance.service';
 
 @Controller('accounts')
 @UseGuards(JwtAuthGuard)
@@ -37,6 +38,7 @@ export class AccountController {
     private readonly transactionCreateService: TransactionCreateService,
     private readonly transactionInternalService: TransactionInternalService,
     private readonly transactionListService: TransactionListService,
+    private readonly accountBalanceService: AccountBalanceService,
   ) { }
 
   @Post()
@@ -57,6 +59,13 @@ export class AccountController {
     const result = await this.accountListService.execute(person.id);
     if (result.isLeft()) throw result;
     return result.value.map((account) => account.toJSON());
+  }
+
+  @Get(':accountId/balance')
+  async getBalance(@Param('accountId') accountId: string) {
+    const result = await this.accountBalanceService.execute(accountId);
+    if (result.isLeft()) throw result;
+    return result.value;
   }
 
   @Post(':accountId/cards')

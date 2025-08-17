@@ -54,6 +54,11 @@ export class InMemoryTransactionRepository
   async getBalance(accountId: string): Promise<number> {
     return this.transactions
       .filter((transaction) => transaction.accountId === accountId)
-      .reduce((acc, transaction) => acc + transaction.value, 0);
+      .reduce((acc, transaction) => {
+        if (transaction.type === 'credit') {
+          return acc + transaction.value;
+        }
+        return acc - transaction.value;
+      }, 0);
   }
 }

@@ -32,14 +32,8 @@ export class TransactionCreateService {
       }
     }
 
-    const value =
-      payload.type === TransactionType.DEBIT
-        ? -payload.value
-        : payload.value;
-
     const transaction = Transaction.create({
       ...payload,
-      value,
       accountId,
     });
 
