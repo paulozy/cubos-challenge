@@ -1,6 +1,6 @@
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { InMemoryHasherGateway } from '@shared/tests/in-memory.gateways/hasher.gateway';
+import { InMemoryHasherGateway } from '@shared/tests/gateways/in-memory-hasher.gateway';
 import { InMemoryPeopleRepository } from '@shared/tests/repositories/in-memory-people.repository';
 import { AuthController } from './auth.controller';
 import { AuthLoginService } from './services/auth-login.service';

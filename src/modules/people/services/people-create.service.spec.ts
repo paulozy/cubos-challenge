@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HasherGatewayInterface } from '@shared/infraestructure/gateways/hasher-gateway.interface';
-import { InMemoryHasherGateway } from '@shared/tests/in-memory.gateways/hasher.gateway';
+import { InMemoryHasherGateway } from '@shared/tests/gateways/in-memory-hasher.gateway';
 import { InMemoryPeopleRepository } from '@shared/tests/repositories/in-memory-people.repository';
 import { Person } from '../entities/person.entity';
 import { PeopleCreateService } from './people-create.service';

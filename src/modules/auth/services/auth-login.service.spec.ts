@@ -1,7 +1,7 @@
 import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { InMemoryHasherGateway } from '@shared/tests/in-memory.gateways/hasher.gateway';
+import { InMemoryHasherGateway } from '@shared/tests/gateways/in-memory-hasher.gateway';
 import { InMemoryPeopleRepository } from '@shared/tests/repositories/in-memory-people.repository';
 import { Person } from '../../people/entities/person.entity';
 import { AuthLoginService } from './auth-login.service';

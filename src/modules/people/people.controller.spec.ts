@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { InMemoryHasherGateway } from '@shared/tests/in-memory.gateways/hasher.gateway';
+import { InMemoryHasherGateway } from '@shared/tests/gateways/in-memory-hasher.gateway';
 import { InMemoryPeopleRepository } from '@shared/tests/repositories/in-memory-people.repository';
 import { PeopleController } from './people.controller';
 import { PeopleCreateService } from './services/people-create.service';
