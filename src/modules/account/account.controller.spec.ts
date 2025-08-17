@@ -18,6 +18,8 @@ import { CardListService } from './services/card-list.service';
 import { TransactionCreateService } from './services/transaction-create.service';
 import { TransactionInternalService } from './services/transaction-internal.service';
 import { TransactionListService } from './services/transaction-list.service';
+import { AccountBalanceService } from './services/account-balance.service';
+import { TransactionRevertService } from './services/transaction-revert.service';
 
 const mockAccountCreateService = {
   execute: jest.fn(),
@@ -47,7 +49,15 @@ const mockTransactionListService = {
   execute: jest.fn(),
 };
 
-describe.skip('AccountController', () => {
+const mockAccountBalanceService = {
+  execute: jest.fn(),
+};
+
+const mockTransactionRevertService = {
+  execute: jest.fn(),
+};
+
+describe('AccountController', () => {
   let controller: AccountController;
 
   const person = Person.create({
@@ -87,6 +97,14 @@ describe.skip('AccountController', () => {
         {
           provide: TransactionListService,
           useValue: mockTransactionListService,
+        },
+        {
+          provide: AccountBalanceService,
+          useValue: mockAccountBalanceService,
+        },
+        {
+          provide: TransactionRevertService,
+          useValue: mockTransactionRevertService,
         },
       ],
     })

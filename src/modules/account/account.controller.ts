@@ -61,7 +61,6 @@ export class AccountController {
     @Body() createAccountDto: CreateAccountDto,
     @CurrentUser() person: Person,
   ) {
-    console.log("🚀 ~ AccountController ~ create ~ person:", person)
     const result = await this.accountCreateService.execute(
       createAccountDto,
       person.id,

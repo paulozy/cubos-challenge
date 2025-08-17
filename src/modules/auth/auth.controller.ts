@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Inject, Post, UnauthorizedException } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 import { AuthLoginService } from './services/auth-login.service';
@@ -17,7 +17,7 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   async login(@Body() loginDto: LoginDto) {
     const result = await this.authLoginService.execute(loginDto);
-    if (result.isLeft()) throw result;
+    if (result.isLeft()) throw new UnauthorizedException(result.value.message);
     return result.value;
   }
 }
