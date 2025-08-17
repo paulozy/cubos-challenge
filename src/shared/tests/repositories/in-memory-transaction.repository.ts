@@ -51,6 +51,13 @@ export class InMemoryTransactionRepository
     };
   }
 
+  async findById(id: string): Promise<Transaction | null> {
+    const transaction = this.transactions.find(
+      (transaction) => transaction.id === id,
+    );
+    return transaction || null;
+  }
+
   async getBalance(accountId: string): Promise<number> {
     return this.transactions
       .filter((transaction) => transaction.accountId === accountId)
@@ -60,5 +67,12 @@ export class InMemoryTransactionRepository
         }
         return acc - transaction.value;
       }, 0);
+  }
+
+  async update(transaction: Transaction): Promise<void> {
+    const index = this.transactions.findIndex((t) => t.id === transaction.id);
+    if (index !== -1) {
+      this.transactions[index] = transaction;
+    }
   }
 }

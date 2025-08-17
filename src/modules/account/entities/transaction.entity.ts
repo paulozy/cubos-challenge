@@ -12,6 +12,7 @@ export type TransactionProps = {
   type: TransactionType;
   cardId?: string;
   accountId: string;
+  revertedById?: string;
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -22,6 +23,7 @@ export class Transaction extends BaseEntity {
   private _type: TransactionType;
   private _cardId?: string;
   private _accountId: string;
+  private _revertedById?: string;
 
   private constructor({
     id,
@@ -30,6 +32,7 @@ export class Transaction extends BaseEntity {
     type,
     cardId,
     accountId,
+    revertedById,
     createdAt,
     updatedAt,
   }: TransactionProps) {
@@ -40,6 +43,7 @@ export class Transaction extends BaseEntity {
     this._type = type;
     this._cardId = cardId;
     this._accountId = accountId;
+    this._revertedById = revertedById;
   }
 
   static create(props: TransactionProps): Transaction {
@@ -66,6 +70,14 @@ export class Transaction extends BaseEntity {
     return this._accountId;
   }
 
+  get revertedById(): string | undefined {
+    return this._revertedById;
+  }
+
+  revert(revertTransactionId: string) {
+    this._revertedById = revertTransactionId;
+  }
+
   public toJSON() {
     return {
       id: this.id,
@@ -74,6 +86,7 @@ export class Transaction extends BaseEntity {
       type: this.type,
       cardId: this.cardId,
       accountId: this.accountId,
+      revertedById: this.revertedById,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

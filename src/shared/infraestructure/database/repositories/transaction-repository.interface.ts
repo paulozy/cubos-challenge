@@ -13,10 +13,12 @@ export interface FindAllResult {
 
 export interface TransactionRepositoryInterface {
   save(transaction: Transaction): Promise<void>;
+  findById(id: string): Promise<Transaction | null>;
   findByAccountId(accountId: string): Promise<Transaction[]>;
   findAll(
     accountId: string,
     options: FindAllOptions,
   ): Promise<FindAllResult>;
   getBalance(accountId: string): Promise<number>;
+  update(transaction: Transaction): Promise<void>;
 }

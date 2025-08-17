@@ -25,6 +25,7 @@ import { TransactionCreateService } from './services/transaction-create.service'
 import { TransactionInternalService } from './services/transaction-internal.service';
 import { TransactionListService } from './services/transaction-list.service';
 import { AccountBalanceService } from './services/account-balance.service';
+import { TransactionRevertService } from './services/transaction-revert.service';
 
 @Controller('accounts')
 @UseGuards(JwtAuthGuard)
@@ -39,6 +40,7 @@ export class AccountController {
     private readonly transactionInternalService: TransactionInternalService,
     private readonly transactionListService: TransactionListService,
     private readonly accountBalanceService: AccountBalanceService,
+    private readonly transactionRevertService: TransactionRevertService,
   ) { }
 
   @Post()
@@ -120,6 +122,19 @@ export class AccountController {
   ) {
     const result = await this.transactionInternalService.execute(
       createInternalTransactionDto,
+      accountId,
+    );
+    if (result.isLeft()) throw result;
+    return result.value.toJSON();
+  }
+
+  @Post(':accountId/transactions/:transactionId/revert')
+  async revertTransaction(
+    @Param('accountId') accountId: string,
+    @Param('transactionId') transactionId: string,
+  ) {
+    const result = await this.transactionRevertService.execute(
+      transactionId,
       accountId,
     );
     if (result.isLeft()) throw result;

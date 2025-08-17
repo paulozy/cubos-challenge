@@ -13,6 +13,7 @@ import { InMemoryAccountRepository } from '@shared/tests/repositories/in-memory-
 import { TransactionInternalService } from './services/transaction-internal.service';
 import { TransactionListService } from './services/transaction-list.service';
 import { AccountBalanceService } from './services/account-balance.service';
+import { TransactionRevertService } from './services/transaction-revert.service';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { AccountBalanceService } from './services/account-balance.service';
     TransactionInternalService,
     TransactionListService,
     AccountBalanceService,
+    TransactionRevertService,
     {
       provide: 'CardRepositoryInterface',
       useClass: InMemoryCardRepository,
