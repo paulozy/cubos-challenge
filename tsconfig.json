@@ -24,6 +24,9 @@
     "paths": {
       "@shared/*": [
         "./src/shared/*"
+      ],
+      "@modules/*": [
+        "./src/modules/*"
       ]
     }
   }

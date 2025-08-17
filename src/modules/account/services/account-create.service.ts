@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Either, left, right } from '@shared/domain/either';
 import type { AccountRepositoryInterface } from '@shared/infraestructure/database/repositories/account-repository.interface';
 import type { PeopleRepositoryInterface } from '@shared/infraestructure/database/repositories/people-repository.interface';
@@ -14,14 +14,14 @@ export class AccountCreateService {
     private readonly accountRepository: AccountRepositoryInterface,
     @Inject('PeopleRepositoryInterface')
     private readonly peopleRepository: PeopleRepositoryInterface,
-  ) {}
+  ) { }
 
   async execute(payload: CreateAccountDto, ownerId: string): Promise<CreateAccountResponse> {
     const { branch, account } = payload;
 
     const owner = await this.peopleRepository.findById(ownerId);
     if (!owner) {
-      return left(new Error('Owner not found'));
+      return left(new NotFoundException());
     }
 
     const accountExists = await this.accountRepository.exists(branch, account);

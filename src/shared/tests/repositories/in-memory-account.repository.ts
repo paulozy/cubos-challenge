@@ -11,4 +11,12 @@ export class InMemoryAccountRepository implements AccountRepositoryInterface {
   async save(account: Account): Promise<void> {
     this.accounts.push(account);
   }
+
+  async findByOwnerId(ownerId: string): Promise<Account[]> {
+    return this.accounts.filter(a => a.ownerId === ownerId);
+  }
+
+  async findById(id: string): Promise<Account | undefined> {
+    return this.accounts.find(a => a.id === id);
+  }
 }

@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { InMemoryAccountRepository } from '@shared/tests/repositories/in-memory-account.repository';
 import { InMemoryPeopleRepository } from '@shared/tests/repositories/in-memory-people.repository';
@@ -46,7 +47,7 @@ describe('AccountCreateService', () => {
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(Error);
-    expect(result.value).toEqual(new Error('Owner not found'));
+    expect(result.value).toBeInstanceOf(NotFoundException);
   });
 
   it('should return a Left if the account already exists', async () => {
