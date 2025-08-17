@@ -22,12 +22,13 @@ export class TransactionListService {
     private readonly transactionRepository: TransactionRepositoryInterface,
     @Inject('AccountRepositoryInterface')
     private readonly accountRepository: AccountRepositoryInterface,
-  ) {}
+  ) { }
 
   async execute(
     accountId: string,
     query: ListTransactionsDto,
   ): Promise<TransactionListServiceResponse> {
+    console.log("🚀 ~ TransactionListService ~ execute ~ query:", query)
     const { currentPage, itemsPerPage } = query;
 
     const account = await this.accountRepository.findById(accountId);

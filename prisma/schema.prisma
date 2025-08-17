@@ -6,10 +6,77 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Person {
+  id        String    @id @default(uuid())
+  name      String
+  document  String    @unique
+  password  String
+  accounts  Account[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("people")
+}
+
+model Account {
+  id           String        @id @default(uuid())
+  branch       String
+  account      String        @unique
+  owner        Person        @relation(fields: [ownerId], references: [id])
+  ownerId      String
+  cards        Card[]
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@map("accounts")
+}
+
+model Card {
+  id           String        @id @default(uuid())
+  type         CardType
+  number       String        @unique
+  cvv          String
+  account      Account       @relation(fields: [accountId], references: [id])
+  accountId    String
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@map("cards")
+}
+
+model Transaction {
+  id           String          @id @default(uuid())
+  value        Float
+  description  String
+  type         TransactionType
+  account      Account         @relation(fields: [accountId], references: [id])
+  accountId    String
+  card         Card?           @relation(fields: [cardId], references: [id])
+  cardId       String?
+  revertedBy   Transaction?    @relation("RevertedTransaction", fields: [revertedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  revertedById String?         @unique
+  reverts      Transaction?    @relation("RevertedTransaction")
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@map("transactions")
+}
+
+enum CardType {
+  VIRTUAL
+  PHYSICAL
+}
+
+enum TransactionType {
+  CREDIT
+  DEBIT
 }

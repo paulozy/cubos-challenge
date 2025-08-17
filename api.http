@@ -1,0 +1,79 @@
+### Create a new user
+POST http://localhost:3000/people
+Content-Type: application/json
+
+{
+  "name": "Jhon Doe",
+  "document": "123.456.789-01",
+  "password": "123456"
+}
+
+### Login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+  "document": "123.456.789-01",
+  "password": "123456"
+}
+
+### Create a new account
+POST http://localhost:3000/accounts
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM2YmY4MWQzLTM2NDItNGJkNC1iZWI4LWYzNGU3ZjdiZjY4MCIsIm5hbWUiOiJKaG9uIERvZSIsImRvY3VtZW50IjoiMTIzLjQ1Ni43ODktMDEiLCJjcmVhdGVkQXQiOiIyMDI1LTA4LTE3VDE3OjEwOjM5LjEzMFoiLCJ1cGRhdGVkQXQiOiIyMDI1LTA4LTE3VDE3OjEwOjM5LjEzMFoiLCJpYXQiOjE3NTU0NTE2NDAsImV4cCI6MTc1NTYyNDQ0MH0.RKjW9yep_4hwM-aN0GvkGNu3z76Vjs260_P6wPs8aHs
+
+{
+  "branch": "0001",
+  "account": "1234567-9"
+}
+
+### Create a new card
+POST http://localhost:3000/accounts/91fcf633-067f-4e2d-9f12-5b8ff4a87781/cards
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM2YmY4MWQzLTM2NDItNGJkNC1iZWI4LWYzNGU3ZjdiZjY4MCIsIm5hbWUiOiJKaG9uIERvZSIsImRvY3VtZW50IjoiMTIzLjQ1Ni43ODktMDEiLCJjcmVhdGVkQXQiOiIyMDI1LTA4LTE3VDE3OjEwOjM5LjEzMFoiLCJ1cGRhdGVkQXQiOiIyMDI1LTA4LTE3VDE3OjEwOjM5LjEzMFoiLCJpYXQiOjE3NTU0NTE2NDAsImV4cCI6MTc1NTYyNDQ0MH0.RKjW9yep_4hwM-aN0GvkGNu3z76Vjs260_P6wPs8aHs
+
+{
+  "type": "virtual"
+}
+
+### List cards from an account
+GET http://localhost:3000/accounts/91fcf633-067f-4e2d-9f12-5b8ff4a87781/cards
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM2YmY4MWQzLTM2NDItNGJkNC1iZWI4LWYzNGU3ZjdiZjY4MCIsIm5hbWUiOiJKaG9uIERvZSIsImRvY3VtZW50IjoiMTIzLjQ1Ni43ODktMDEiLCJjcmVhdGVkQXQiOiIyMDI1LTA4LTE3VDE3OjEwOjM5LjEzMFoiLCJ1cGRhdGVkQXQiOiIyMDI1LTA4LTE3VDE3OjEwOjM5LjEzMFoiLCJpYXQiOjE3NTU0NTE2NDAsImV4cCI6MTc1NTYyNDQ0MH0.RKjW9yep_4hwM-aN0GvkGNu3z76Vjs260_P6wPs8aHs
+
+### List cards from a person
+GET http://localhost:3000/cards
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM2YmY4MWQzLTM2NDItNGJkNC1iZWI4LWYzNGU3ZjdiZjY4MCIsIm5hbWUiOiJKaG9uIERvZSIsImRvY3VtZW50IjoiMTIzLjQ1Ni43ODktMDEiLCJjcmVhdGVkQXQiOiIyMDI1LTA4LTE3VDE3OjEwOjM5LjEzMFoiLCJ1cGRhdGVkQXQiOiIyMDI1LTA4LTE3VDE3OjEwOjM5LjEzMFoiLCJpYXQiOjE3NTU0NTE2NDAsImV4cCI6MTc1NTYyNDQ0MH0.RKjW9yep_4hwM-aN0GvkGNu3z76Vjs260_P6wPs8aHs
+
+### Create a new transaction
+POST http://localhost:3000/accounts/91fcf633-067f-4e2d-9f12-5b8ff4a87781/transactions
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM2YmY4MWQzLTM2NDItNGJkNC1iZWI4LWYzNGU3ZjdiZjY4MCIsIm5hbWUiOiJKaG9uIERvZSIsImRvY3VtZW50IjoiMTIzLjQ1Ni43ODktMDEiLCJjcmVhdGVkQXQiOiIyMDI1LTA4LTE3VDE3OjEwOjM5LjEzMFoiLCJ1cGRhdGVkQXQiOiIyMDI1LTA4LTE3VDE3OjEwOjM5LjEzMFoiLCJpYXQiOjE3NTU0NTE2NDAsImV4cCI6MTc1NTYyNDQ0MH0.RKjW9yep_4hwM-aN0GvkGNu3z76Vjs260_P6wPs8aHs
+
+{
+  "type": "credit",
+  "value": 100.00,
+  "description": "Venda do cimento para Clodson"
+}
+
+### GET an account balance
+GET http://localhost:3000/accounts/91fcf633-067f-4e2d-9f12-5b8ff4a87781/balance
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM2YmY4MWQzLTM2NDItNGJkNC1iZWI4LWYzNGU3ZjdiZjY4MCIsIm5hbWUiOiJKaG9uIERvZSIsImRvY3VtZW50IjoiMTIzLjQ1Ni43ODktMDEiLCJjcmVhdGVkQXQiOiIyMDI1LTA4LTE3VDE3OjEwOjM5LjEzMFoiLCJ1cGRhdGVkQXQiOiIyMDI1LTA4LTE3VDE3OjEwOjM5LjEzMFoiLCJpYXQiOjE3NTU0NTE2NDAsImV4cCI6MTc1NTYyNDQ0MH0.RKjW9yep_4hwM-aN0GvkGNu3z76Vjs260_P6wPs8aHs
+
+### Create a new transaction
+POST http://localhost:3000/accounts/91fcf633-067f-4e2d-9f12-5b8ff4a87781/transactions/internal
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM2YmY4MWQzLTM2NDItNGJkNC1iZWI4LWYzNGU3ZjdiZjY4MCIsIm5hbWUiOiJKaG9uIERvZSIsImRvY3VtZW50IjoiMTIzLjQ1Ni43ODktMDEiLCJjcmVhdGVkQXQiOiIyMDI1LTA4LTE3VDE3OjEwOjM5LjEzMFoiLCJ1cGRhdGVkQXQiOiIyMDI1LTA4LTE3VDE3OjEwOjM5LjEzMFoiLCJpYXQiOjE3NTU0NTE2NDAsImV4cCI6MTc1NTYyNDQ0MH0.RKjW9yep_4hwM-aN0GvkGNu3z76Vjs260_P6wPs8aHs
+
+{
+  "receiverAccountId": "2076eca9-6143-4df6-843a-e4199f15e9cf",
+  "value": 10.00,
+  "description": "Venda do cimento para Clodson2"
+}
+
+### List an account transactions
+GET http://localhost:3000/accounts/91fcf633-067f-4e2d-9f12-5b8ff4a87781/transactions?currentPage=1&itemsPerPage=10
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM2YmY4MWQzLTM2NDItNGJkNC1iZWI4LWYzNGU3ZjdiZjY4MCIsIm5hbWUiOiJKaG9uIERvZSIsImRvY3VtZW50IjoiMTIzLjQ1Ni43ODktMDEiLCJjcmVhdGVkQXQiOiIyMDI1LTA4LTE3VDE3OjEwOjM5LjEzMFoiLCJ1cGRhdGVkQXQiOiIyMDI1LTA4LTE3VDE3OjEwOjM5LjEzMFoiLCJpYXQiOjE3NTU0NTE2NDAsImV4cCI6MTc1NTYyNDQ0MH0.RKjW9yep_4hwM-aN0GvkGNu3z76Vjs260_P6wPs8aHs

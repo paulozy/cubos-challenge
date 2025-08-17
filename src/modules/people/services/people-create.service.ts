@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Either, left, right } from '@shared/domain/either';
-import type { PeopleRepositoryInterface } from '@shared/infraestructure/database/repositories/people-repository.interface';
-import type { HasherGatewayInterface } from '@shared/infraestructure/gateways/hasher-gateway.interface';
+import { PeopleRepositoryInterface } from '@shared/infraestructure/database/repositories/people-repository.interface';
+import { HasherGatewayInterface } from '@shared/infraestructure/gateways/hasher-gateway.interface';
 import { CreatePersonDto } from '../dto/create-person.dto';
 import { Person } from '../entities/person.entity';
 
@@ -14,7 +14,7 @@ export class PeopleCreateService {
     private readonly hasherGateway: HasherGatewayInterface,
     @Inject('PeopleRepositoryInterface')
     private readonly peopleRepository: PeopleRepositoryInterface,
-  ) {}
+  ) { }
 
   async execute(payload: CreatePersonDto): Promise<CreatePersonResponse> {
     const { name, document, password } = payload;

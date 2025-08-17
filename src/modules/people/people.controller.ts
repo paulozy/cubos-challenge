@@ -2,8 +2,9 @@ import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import {
   Body,
   Controller,
+  Inject,
   Post,
-  UsePipes
+  UsePipes,
 } from '@nestjs/common';
 import { CreatePersonDto } from './dto/create-person.dto';
 import { PeopleCreateService } from './services/people-create.service';
@@ -12,8 +13,9 @@ import { PeopleCreateService } from './services/people-create.service';
 @UsePipes(ZodValidationPipe)
 export class PeopleController {
   constructor(
-    private readonly createService: PeopleCreateService
-  ) { }
+    @Inject(PeopleCreateService)
+    private readonly createService: PeopleCreateService,
+  ) {}
 
   @Post()
   async create(@Body() createPersonDto: CreatePersonDto) {

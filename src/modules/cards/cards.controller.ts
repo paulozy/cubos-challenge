@@ -1,15 +1,16 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Inject, Query, UseGuards } from '@nestjs/common';
 import { CurrentUser } from '@shared/infraestructure/decorators/current-user.decorator';
-import { Person } from '../people/entities/person.entity';
 import { JwtAuthGuard } from 'src/infraestructure/auth/guards/jwt-auth.guard';
+import { Person } from '../people/entities/person.entity';
 import { CardListByPersonService } from './services/card-list-by-person.service';
 
 @Controller('cards')
 @UseGuards(JwtAuthGuard)
 export class CardsController {
   constructor(
+    @Inject(CardListByPersonService)
     private readonly cardListByPersonService: CardListByPersonService,
-  ) {}
+  ) { }
 
   @Get()
   async findAll(

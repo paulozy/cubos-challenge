@@ -34,10 +34,7 @@ export class AuthLoginService {
       return left(new UnauthorizedException());
     }
 
-    const accessToken = await this.jwtService.signAsync({
-      sub: person.id,
-      document: person.document,
-    });
+    const accessToken = await this.jwtService.signAsync(person.toJSON(), { expiresIn: '2d' });
 
     return right({ accessToken: `Bearer ${accessToken}` });
   }
