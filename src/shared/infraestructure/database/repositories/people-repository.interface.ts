@@ -4,4 +4,5 @@ export interface PeopleRepositoryInterface {
   exists(document: string): Promise<boolean>
   save(person: Person): Promise<void>
   findByDocument(document: string): Promise<Person | undefined>
+  findById(id: string): Promise<Person | undefined>
 }

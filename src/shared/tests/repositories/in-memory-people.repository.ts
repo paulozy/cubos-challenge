@@ -15,4 +15,8 @@ export class InMemoryPeopleRepository implements PeopleRepositoryInterface {
   async findByDocument(document: string): Promise<Person | undefined> {
     return this.people.find((p) => p.document === document);
   }
+
+  async findById(id: string): Promise<Person | undefined> {
+    return this.people.find((p) => p.id === id);
+  }
 }

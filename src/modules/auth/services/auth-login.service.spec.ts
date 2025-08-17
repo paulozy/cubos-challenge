@@ -1,3 +1,4 @@
+import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { InMemoryHasherGateway } from '@shared/tests/in-memory.gateways/hasher.gateway';
@@ -52,7 +53,7 @@ describe('AuthLoginService', () => {
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(Error);
-    expect(result.value).toEqual(new Error('Invalid credentials'));
+    expect(result.value).toBeInstanceOf(UnauthorizedException);
   });
 
   it('should return Left if password does not match', async () => {
@@ -71,7 +72,7 @@ describe('AuthLoginService', () => {
 
     expect(result.isLeft()).toBe(true);
     expect(result.value).toBeInstanceOf(Error);
-    expect(result.value).toEqual(new Error('Invalid credentials'));
+    expect(result.value).toBeInstanceOf(UnauthorizedException);
   });
 
   it('should call jwtService.signAsync with correct payload on success', async () => {

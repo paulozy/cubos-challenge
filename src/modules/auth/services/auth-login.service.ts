@@ -1,8 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Either, left, right } from '@shared/domain/either';
-import type { PeopleRepositoryInterface } from '@shared/infraestructure/database/repositories/people-repository.interface';
-import type { HasherGatewayInterface } from '@shared/infraestructure/gateways/hasher-gateway.interface';
+import { PeopleRepositoryInterface } from '@shared/infraestructure/database/repositories/people-repository.interface';
+import { HasherGatewayInterface } from '@shared/infraestructure/gateways/hasher-gateway.interface';
 import { LoginDto } from '../dto/login.dto';
 
 type LoginResponse = Either<Error, { accessToken: string }>;
@@ -16,14 +16,14 @@ export class AuthLoginService {
     private readonly hasherGateway: HasherGatewayInterface,
     @Inject(JwtService)
     private readonly jwtService: JwtService,
-  ) {}
+  ) { }
 
   async execute(payload: LoginDto): Promise<LoginResponse> {
     const { document, password } = payload;
 
     const person = await this.peopleRepository.findByDocument(document);
     if (!person) {
-      return left(new Error('Invalid credentials'));
+      return left(new UnauthorizedException());
     }
 
     const passwordMatch = await this.hasherGateway.compare(
@@ -31,7 +31,7 @@ export class AuthLoginService {
       person.password,
     );
     if (!passwordMatch) {
-      return left(new Error('Invalid credentials'));
+      return left(new UnauthorizedException());
     }
 
     const accessToken = await this.jwtService.signAsync({
