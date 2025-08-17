@@ -6,6 +6,7 @@ import { InMemoryCardRepository } from '@shared/tests/repositories/in-memory-car
 import { AuthModule } from '../auth/auth.module';
 import { AccountListService } from './services/account-list.service';
 import { CardCreateService } from './services/card-create.service';
+import { CardListService } from './services/card-list.service';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { CardCreateService } from './services/card-create.service';
     AccountCreateService,
     AccountListService,
     CardCreateService,
+    CardListService,
     {
       provide: 'CardRepositoryInterface',
       useClass: InMemoryCardRepository,

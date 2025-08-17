@@ -16,6 +16,7 @@ import { CreateCardDto } from './dto/create-card.dto';
 import { AccountCreateService } from './services/account-create.service';
 import { AccountListService } from './services/account-list.service';
 import { CardCreateService } from './services/card-create.service';
+import { CardListService } from './services/card-list.service';
 
 @Controller('accounts')
 @UseGuards(JwtAuthGuard)
@@ -25,6 +26,7 @@ export class AccountController {
     private readonly accountCreateService: AccountCreateService,
     private readonly accountListService: AccountListService,
     private readonly cardCreateService: CardCreateService,
+    private readonly cardListService: CardListService,
   ) { }
 
   @Post()
@@ -52,5 +54,12 @@ export class AccountController {
     );
     if (result.isLeft()) throw result;
     return result.value.toJSON();
+  }
+
+  @Get(':accountId/cards')
+  async findAllCards(@Param('accountId') accountId: string) {
+    const result = await this.cardListService.execute(accountId);
+    if (result.isLeft()) throw result;
+    return result.value.map(card => card.toJSON());
   }
 }

@@ -10,6 +10,7 @@ import { Card, CardType } from './entities/card.entity';
 import { AccountCreateService } from './services/account-create.service';
 import { AccountListService } from './services/account-list.service';
 import { CardCreateService } from './services/card-create.service';
+import { CardListService } from './services/card-list.service';
 
 const mockAccountCreateService = {
   execute: jest.fn(),
@@ -20,6 +21,10 @@ const mockAccountListService = {
 };
 
 const mockCardCreateService = {
+  execute: jest.fn(),
+};
+
+const mockCardListService = {
   execute: jest.fn(),
 };
 
@@ -47,6 +52,10 @@ describe.skip('AccountController', () => {
         {
           provide: CardCreateService,
           useValue: mockCardCreateService,
+        },
+        {
+          provide: CardListService,
+          useValue: mockCardListService,
         },
       ],
     })
@@ -128,6 +137,29 @@ describe.skip('AccountController', () => {
         payload,
         mockAccount.id,
       );
+    });
+  });
+
+  describe('findAllCards', () => {
+    it('should return a list of cards', async () => {
+      const mockAccount = Account.create({
+        account: '1234567-8',
+        branch: '0001',
+        ownerId: person.id,
+      });
+
+      const mockCard = Card.create({
+        type: CardType.VIRTUAL,
+        number: '1234567890123456',
+        cvv: '123',
+        accountId: mockAccount.id,
+      });
+
+      mockCardListService.execute.mockResolvedValue(right([mockCard]));
+
+      const result = await controller.findAllCards(mockAccount.id);
+      expect(result).toEqual([mockCard.toJSON()]);
+      expect(mockCardListService.execute).toHaveBeenCalledWith(mockAccount.id);
     });
   });
 });
