@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Get,
+  Inject,
   Param,
   Post,
   Query,
@@ -17,6 +18,7 @@ import { CreateCardDto } from './dto/create-card.dto';
 import { CreateInternalTransactionDto } from './dto/create-internal-transaction.dto';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { ListTransactionsDto } from './dto/list-transactions.dto';
+import { AccountBalanceService } from './services/account-balance.service';
 import { AccountCreateService } from './services/account-create.service';
 import { AccountListService } from './services/account-list.service';
 import { CardCreateService } from './services/card-create.service';
@@ -24,7 +26,6 @@ import { CardListService } from './services/card-list.service';
 import { TransactionCreateService } from './services/transaction-create.service';
 import { TransactionInternalService } from './services/transaction-internal.service';
 import { TransactionListService } from './services/transaction-list.service';
-import { AccountBalanceService } from './services/account-balance.service';
 import { TransactionRevertService } from './services/transaction-revert.service';
 
 @Controller('accounts')
@@ -32,14 +33,23 @@ import { TransactionRevertService } from './services/transaction-revert.service'
 @UsePipes(ZodValidationPipe)
 export class AccountController {
   constructor(
+    @Inject(AccountCreateService)
     private readonly accountCreateService: AccountCreateService,
+    @Inject(AccountListService)
     private readonly accountListService: AccountListService,
+    @Inject(CardCreateService)
     private readonly cardCreateService: CardCreateService,
+    @Inject(CardListService)
     private readonly cardListService: CardListService,
+    @Inject(TransactionCreateService)
     private readonly transactionCreateService: TransactionCreateService,
+    @Inject(TransactionInternalService)
     private readonly transactionInternalService: TransactionInternalService,
+    @Inject(TransactionListService)
     private readonly transactionListService: TransactionListService,
+    @Inject(AccountBalanceService)
     private readonly accountBalanceService: AccountBalanceService,
+    @Inject(TransactionRevertService)
     private readonly transactionRevertService: TransactionRevertService,
   ) { }
 
@@ -48,6 +58,7 @@ export class AccountController {
     @Body() createAccountDto: CreateAccountDto,
     @CurrentUser() person: Person,
   ) {
+    console.log("🚀 ~ AccountController ~ create ~ person:", person)
     const result = await this.accountCreateService.execute(
       createAccountDto,
       person.id,
