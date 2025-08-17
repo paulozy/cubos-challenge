@@ -6,17 +6,19 @@ import {
   Param,
   Post,
   UseGuards,
-  UsePipes
+  UsePipes,
 } from '@nestjs/common';
 import { CurrentUser } from '@shared/infraestructure/decorators/current-user.decorator';
 import { Person } from 'src/modules/people/entities/person.entity';
 import { JwtAuthGuard } from '../../infraestructure/auth/guards/jwt-auth.guard';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { CreateCardDto } from './dto/create-card.dto';
+import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { AccountCreateService } from './services/account-create.service';
 import { AccountListService } from './services/account-list.service';
 import { CardCreateService } from './services/card-create.service';
 import { CardListService } from './services/card-list.service';
+import { TransactionCreateService } from './services/transaction-create.service';
 
 @Controller('accounts')
 @UseGuards(JwtAuthGuard)
@@ -27,11 +29,18 @@ export class AccountController {
     private readonly accountListService: AccountListService,
     private readonly cardCreateService: CardCreateService,
     private readonly cardListService: CardListService,
-  ) { }
+    private readonly transactionCreateService: TransactionCreateService,
+  ) {}
 
   @Post()
-  async create(@Body() createAccountDto: CreateAccountDto, @CurrentUser() person: Person) {
-    const result = await this.accountCreateService.execute(createAccountDto, person.id);
+  async create(
+    @Body() createAccountDto: CreateAccountDto,
+    @CurrentUser() person: Person,
+  ) {
+    const result = await this.accountCreateService.execute(
+      createAccountDto,
+      person.id,
+    );
     if (result.isLeft()) throw result;
     return result.value.toJSON();
   }
@@ -40,7 +49,7 @@ export class AccountController {
   async findAll(@CurrentUser() person: Person) {
     const result = await this.accountListService.execute(person.id);
     if (result.isLeft()) throw result;
-    return result.value.map(account => account.toJSON());
+    return result.value.map((account) => account.toJSON());
   }
 
   @Post(':accountId/cards')
@@ -60,6 +69,19 @@ export class AccountController {
   async findAllCards(@Param('accountId') accountId: string) {
     const result = await this.cardListService.execute(accountId);
     if (result.isLeft()) throw result;
-    return result.value.map(card => card.toJSON());
+    return result.value.map((card) => card.toJSON());
+  }
+
+  @Post(':accountId/transactions')
+  async createTransaction(
+    @Param('accountId') accountId: string,
+    @Body() createTransactionDto: CreateTransactionDto,
+  ) {
+    const result = await this.transactionCreateService.execute(
+      createTransactionDto,
+      accountId,
+    );
+    if (result.isLeft()) throw result;
+    return result.value.toJSON();
   }
 }

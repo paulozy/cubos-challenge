@@ -1,5 +1,5 @@
+import { Account } from '@modules/account/entities/account.entity';
 import { AccountRepositoryInterface } from '@shared/infraestructure/database/repositories/account-repository.interface';
-import { Account } from 'src/modules/account/entities/account.entity';
 
 export class InMemoryAccountRepository implements AccountRepositoryInterface {
   public accounts: Account[] = [];
