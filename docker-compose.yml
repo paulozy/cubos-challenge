@@ -1,5 +1,20 @@
 version: '3.8'
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://johndoe:randompassword@postgres:5432/mydb?schema=public
+
   postgres:
     image: postgres:13
     restart: always
