@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
@@ -15,12 +16,14 @@ import { CreateAccountDto } from './dto/create-account.dto';
 import { CreateCardDto } from './dto/create-card.dto';
 import { CreateInternalTransactionDto } from './dto/create-internal-transaction.dto';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
+import { ListTransactionsDto } from './dto/list-transactions.dto';
 import { AccountCreateService } from './services/account-create.service';
 import { AccountListService } from './services/account-list.service';
 import { CardCreateService } from './services/card-create.service';
 import { CardListService } from './services/card-list.service';
 import { TransactionCreateService } from './services/transaction-create.service';
 import { TransactionInternalService } from './services/transaction-internal.service';
+import { TransactionListService } from './services/transaction-list.service';
 
 @Controller('accounts')
 @UseGuards(JwtAuthGuard)
@@ -33,7 +36,8 @@ export class AccountController {
     private readonly cardListService: CardListService,
     private readonly transactionCreateService: TransactionCreateService,
     private readonly transactionInternalService: TransactionInternalService,
-  ) {}
+    private readonly transactionListService: TransactionListService,
+  ) { }
 
   @Post()
   async create(
@@ -86,6 +90,18 @@ export class AccountController {
     );
     if (result.isLeft()) throw result;
     return result.value.toJSON();
+  }
+
+  @Get(':accountId/transactions')
+  async findAllTransactions(
+    @Param('accountId') accountId: string,
+    @Query() query: ListTransactionsDto,
+  ) {
+    const result = await this.transactionListService.execute(accountId, query);
+    if (result.isLeft()) {
+      throw result.value;
+    }
+    return result.value;
   }
 
   @Post(':accountId/transactions/internal')

@@ -7,6 +7,7 @@ import { CreateAccountDto } from './dto/create-account.dto';
 import { CreateCardDto } from './dto/create-card.dto';
 import { CreateInternalTransactionDto } from './dto/create-internal-transaction.dto';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
+import { ListTransactionsDto } from './dto/list-transactions.dto';
 import { Account } from './entities/account.entity';
 import { Card, CardType } from './entities/card.entity';
 import { Transaction, TransactionType } from './entities/transaction.entity';
@@ -16,6 +17,7 @@ import { CardCreateService } from './services/card-create.service';
 import { CardListService } from './services/card-list.service';
 import { TransactionCreateService } from './services/transaction-create.service';
 import { TransactionInternalService } from './services/transaction-internal.service';
+import { TransactionListService } from './services/transaction-list.service';
 
 const mockAccountCreateService = {
   execute: jest.fn(),
@@ -38,6 +40,10 @@ const mockTransactionCreateService = {
 };
 
 const mockTransactionInternalService = {
+  execute: jest.fn(),
+};
+
+const mockTransactionListService = {
   execute: jest.fn(),
 };
 
@@ -77,6 +83,10 @@ describe.skip('AccountController', () => {
         {
           provide: TransactionInternalService,
           useValue: mockTransactionInternalService,
+        },
+        {
+          provide: TransactionListService,
+          useValue: mockTransactionListService,
         },
       ],
     })
@@ -214,6 +224,45 @@ describe.skip('AccountController', () => {
       expect(mockTransactionCreateService.execute).toHaveBeenCalledWith(
         payload,
         mockAccount.id,
+      );
+    });
+  });
+
+  describe('findAllTransactions', () => {
+    it('should return a list of transactions', async () => {
+      const mockAccount = Account.create({
+        account: '1234567-8',
+        branch: '0001',
+        ownerId: person.id,
+      });
+
+      const mockTransaction = Transaction.create({
+        value: 100,
+        description: 'Test',
+        type: TransactionType.CREDIT,
+        accountId: mockAccount.id,
+      });
+
+      const query: ListTransactionsDto = {
+        itemsPerPage: 10,
+        currentPage: 1,
+      };
+
+      const response = {
+        data: [mockTransaction],
+        total: 1,
+        itemsPerPage: 10,
+        currentPage: 1,
+        totalPages: 1,
+      };
+
+      mockTransactionListService.execute.mockResolvedValue(right(response));
+
+      const result = await controller.findAllTransactions(mockAccount.id, query);
+      expect(result).toEqual(response);
+      expect(mockTransactionListService.execute).toHaveBeenCalledWith(
+        mockAccount.id,
+        query,
       );
     });
   });

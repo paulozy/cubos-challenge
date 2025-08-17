@@ -1,5 +1,9 @@
 import { Transaction } from 'src/modules/account/entities/transaction.entity';
-import { TransactionRepositoryInterface } from '@shared/infraestructure/database/repositories/transaction-repository.interface';
+import {
+  FindAllOptions,
+  FindAllResult,
+  TransactionRepositoryInterface,
+} from '@shared/infraestructure/database/repositories/transaction-repository.interface';
 
 export class InMemoryTransactionRepository
   implements TransactionRepositoryInterface
@@ -14,6 +18,37 @@ export class InMemoryTransactionRepository
     return this.transactions.filter(
       (transaction) => transaction.accountId === accountId,
     );
+  }
+
+  async findAll(
+    accountId: string,
+    options: FindAllOptions,
+  ): Promise<FindAllResult> {
+    const { itemsPerPage, currentPage, type } = options;
+
+    let accountTransactions = this.transactions.filter(
+      (transaction) => transaction.accountId === accountId,
+    );
+
+    if (type) {
+      accountTransactions = accountTransactions.filter(
+        (transaction) => transaction.type === type,
+      );
+    }
+
+    const total = accountTransactions.length;
+
+    accountTransactions.sort(
+      (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+    );
+
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+
+    return {
+      transactions: accountTransactions.slice(start, end),
+      total,
+    };
   }
 
   async getBalance(accountId: string): Promise<number> {
