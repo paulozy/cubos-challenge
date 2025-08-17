@@ -1,10 +1,8 @@
-import { ZodValidationPipe } from '@anatine/zod-nestjs';
-import { Body, Controller, Inject, Post, UsePipes } from '@nestjs/common';
+import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { AuthLoginService } from './services/auth-login.service';
 
 @Controller('auth')
-@UsePipes(ZodValidationPipe)
 export class AuthController {
   constructor(
     @Inject(AuthLoginService)

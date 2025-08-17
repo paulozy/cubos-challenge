@@ -44,7 +44,6 @@ export class PrismaTransactionRepository
     options: FindAllOptions,
   ): Promise<FindAllResult> {
     const { itemsPerPage, currentPage, type } = options;
-    console.log("🚀 ~ PrismaTransactionRepository ~ findAll ~ options:", options)
     const where: Prisma.TransactionWhereInput = {
       accountId,
     };
@@ -60,7 +59,7 @@ export class PrismaTransactionRepository
     const transactions = await this.prisma.transaction.findMany({
       where,
       skip: (currentPage - 1) * itemsPerPage,
-      take: itemsPerPage,
+      take: +itemsPerPage,
       orderBy: {
         createdAt: 'desc',
       },

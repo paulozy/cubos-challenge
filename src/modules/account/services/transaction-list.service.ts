@@ -28,8 +28,7 @@ export class TransactionListService {
     accountId: string,
     query: ListTransactionsDto,
   ): Promise<TransactionListServiceResponse> {
-    console.log("🚀 ~ TransactionListService ~ execute ~ query:", query)
-    const { currentPage, itemsPerPage } = query;
+    const { currentPage = 1, itemsPerPage = 10, type } = query;
 
     const account = await this.accountRepository.findById(accountId);
     if (!account) {
@@ -38,17 +37,17 @@ export class TransactionListService {
 
     const { transactions, total } = await this.transactionRepository.findAll(
       accountId,
-      query,
+      { currentPage, itemsPerPage, type },
     );
 
     const totalPages = Math.ceil(total / itemsPerPage);
 
     return right({
       data: transactions,
-      total,
-      itemsPerPage,
-      currentPage,
-      totalPages,
+      total: +total,
+      itemsPerPage: +itemsPerPage,
+      currentPage: +currentPage,
+      totalPages: +totalPages,
     });
   }
 }

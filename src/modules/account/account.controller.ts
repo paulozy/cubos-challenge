@@ -1,4 +1,3 @@
-import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import {
   Body,
   Controller,
@@ -7,8 +6,7 @@ import {
   Param,
   Post,
   Query,
-  UseGuards,
-  UsePipes,
+  UseGuards
 } from '@nestjs/common';
 import { CurrentUser } from '@shared/infraestructure/decorators/current-user.decorator';
 import { Person } from 'src/modules/people/entities/person.entity';
@@ -30,7 +28,6 @@ import { TransactionRevertService } from './services/transaction-revert.service'
 
 @Controller('accounts')
 @UseGuards(JwtAuthGuard)
-@UsePipes(ZodValidationPipe)
 export class AccountController {
   constructor(
     @Inject(AccountCreateService)
